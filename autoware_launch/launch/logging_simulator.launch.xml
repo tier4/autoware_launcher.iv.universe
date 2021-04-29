@@ -14,6 +14,10 @@
   <arg name="sensing" default="true" description="launch sensing" />
   <arg name="localization" default="true" description="launch localization" />
   <arg name="perception" default="true" description="launch perception" />
+  <arg name="dummy_perception" default="false" description="launch dummy_perception" />
+  <arg name="perception/enable_detection_failure" default="true"/>
+  <arg name="perception/enable_object_recognition" default="true"/>
+  <arg name="sensing/visible_range" default="300.0"/>
   <arg name="planning" default="true" description="launch planning" />
   <arg name="control" default="true" description="launch control" />
   <arg name="rviz" default="true" description="launch rviz" />
@@ -69,12 +73,17 @@
     </include>
   </group>
 
-
   <!-- Perception -->
   <group>
     <include file="$(find-pkg-share perception_launch)/launch/perception.launch.xml" if="$(var perception)">
       <!-- options for mode: camera_lidar_fusion, lidar, camera -->
       <arg name="mode" value="lidar" />
+    </include>
+    <!-- Dummy Perception -->
+    <include file="$(find-pkg-share dummy_perception_publisher)/launch/dummy_perception_publisher.launch.xml" if="$(var dummy_perception)">
+      <arg name="real" value="$(var perception/enable_detection_failure)"/>
+      <arg name="use_object_recognition" value="$(var perception/enable_object_recognition)"/>
+      <arg name="visible_range" value="$(var sensing/visible_range)"/>
     </include>
   </group>
 
